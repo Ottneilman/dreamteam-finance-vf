@@ -125,9 +125,60 @@ const DreamTeamFinanceApp = () => {
         </div>
       </header>
       <main className="p-6 max-w-6xl mx-auto">
-        <p className="text-center text-gray-400">Aquí irá toda la interfaz interactiva que tenías en Claude, lista para reinsertar</p>
-        {/* Aquí puedes seguir agregando los componentes de tarjetas, gráficos, formularios como los tenías */}
-      </main>
+  {/* Tarjetas de Resumen */}
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
+    <StatCard title="Ingresos Totales" value={totalIncome} icon={TrendingUp} color="text-green-400" bgColor="bg-gray-900" />
+    <StatCard title="Gastos Totales" value={totalExpenses} icon={TrendingDown} color="text-red-400" bgColor="bg-gray-900" />
+    <StatCard title="Disponible" value={available} icon={Wallet} color={available >= 0 ? "text-green-400" : "text-red-400"} bgColor="bg-gray-900" />
+  </div>
+
+  {/* Gráficos */}
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+    {/* Gráfico de Gastos por Categoría */}
+    <div className="bg-gray-900 p-6 rounded-xl shadow-lg border-2 border-gray-800">
+      <h3 className="text-xl font-bold mb-4 text-center text-orange-400">Gastos por Categoría</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <PieChart>
+          <Pie
+            data={expensesByCategory}
+            cx="50%"
+            cy="50%"
+            labelLine={false}
+            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+            outerRadius={80}
+            fill="#8884d8"
+            dataKey="value"
+          >
+            {expensesByCategory.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+          <Tooltip />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
+
+    {/* Gráfico de Barras Comparativo */}
+    <div className="bg-gray-900 p-6 rounded-xl shadow-lg border-2 border-gray-800">
+      <h3 className="text-xl font-bold mb-4 text-center text-green-400">Resumen Financiero</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart
+          data={[
+            { name: 'Ingresos', value: totalIncome, fill: '#32CD32' },
+            { name: 'Gastos', value: totalExpenses, fill: '#FF6B35' },
+            { name: 'Disponible', value: available, fill: available >= 0 ? '#32CD32' : '#FF0000' }
+          ]}
+        >
+          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+          <XAxis dataKey="name" stroke="#9CA3AF" />
+          <YAxis stroke="#9CA3AF" />
+          <Tooltip contentStyle={{ backgroundColor: '#1F2937', border: '1px solid #374151', borderRadius: '8px', color: '#F9FAFB' }} />
+          <Bar dataKey="value" />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  </div>
+</main>
       <footer className="text-center py-6 text-gray-400">
         <p>© 2025 DREAMTEAM - Finanzas Personales</p>
       </footer>
